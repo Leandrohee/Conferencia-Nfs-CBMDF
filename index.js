@@ -268,7 +268,7 @@ conferePlaca()
 
 //MARCA e DESCONO
 var texto = document.body.innerHTML
-var tent1, tent2, tent3
+var tent1, tent2, tent3, tent4
 var regexDesconto = /[\d]{2}[.,]?[\d]{0,2}%/g
 var regexRenault = /RENAULT/i
 var regexFord = /FORD/i
@@ -280,6 +280,7 @@ var regexFiat = /fiat/i
 var regexMitsubishi = /mitsubishi/i
 var regexGm = /gm\s/i
 var regexVw =/vw/i
+var resultadoDesconto
 
 var matchesDesconto = texto.match(regexDesconto);
 var matchesRenault =  texto.match(regexRenault);
@@ -300,10 +301,10 @@ function verificaDesconto(desc1,desc2,desc3,desc4){
     tent4 = matchesDesconto.filter(element => element == desc4)
 
     if ((tent1.length +tent2.length + tent3.length) >= 2){
-        console.log("Marca e Codigo Ok")
+        resultadoDesconto = 'MARCA E DESCONTO: Ok'
     }
     else{
-        console.log("marca e codigo errados")
+       resultadoDesconto = 'Marca e desconto: ERRADOS!!!'
     }
 }
 
@@ -317,7 +318,6 @@ if(matchesGm){
     verificaDesconto("65.00%","65,00%","65%")
 }
 if(matchesVw){
-    console.log(matchesVw)
     verificaDesconto("49.10%","49,10%","49,1%","41.1%")
 }
 
@@ -342,6 +342,7 @@ console.log(resultadoOs);
 console.log(resultadoNe);
 console.log(resultadoPrefixo)
 console.log(resultadoPlaca)
+console.log(resultadoDesconto)
 console.log("-------------------------------------------")
 //FIM
 
