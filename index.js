@@ -1,54 +1,44 @@
 //-----------------------------------PEDIDO------------------------------------
-
 var texto = document.body.innerHTML
 var regexPedido = /(PED[\w]{0,3}[\s:-]{0,3})([\d]{1,4})/gi
 var matchesPed = texto.match(regexPedido);
 var primeiroPedido, segundoPedido
-var arrayNumber = [0,1,2,3,4,5,6,7,8,9]
 var resultadoPedido
 
 
 async function conferePedido(){                                            //Conferir pedido
     try{
-        //Descobrindo o primeiro numero do pedido
-        if(arrayNumber.includes(Number(matchesPed[0].slice(-2,-1))) == false){
-            primeiroPedido = matchesPed[0].slice(-1);
-        }
-        else if(arrayNumber.includes(Number(matchesPed[0].slice(-3,-2))) == false){
-            primeiroPedido = matchesPed[0].slice(-2);
-        }
-        else if(arrayNumber.includes(Number(matchesPed[0].slice(-4,-3))) == false){
-            primeiroPedido = matchesPed[0].slice(-3);
-        }
-        else if(arrayNumber.includes(Number(matchesPed[0].slice(-5,-4))) == false){
-            primeiroPedido = matchesPed[0].slice(-4);
-        }
+        if(matchesPed.length == 2){
+            primeiroPedido = matchesPed[0]
+            primeiroPedido = primeiroPedido.replaceAll(/\s/g,"")
+            primeiroPedido = primeiroPedido.replaceAll(/[a-z]/gi,"")
+            primeiroPedido = primeiroPedido.replaceAll(":","")
+            primeiroPedido = primeiroPedido.replaceAll("-","")
 
-        //Descobrindo o segundo numero do pedido
-        if(arrayNumber.includes(Number(matchesPed[0].slice(-2,-1))) == false){
-            segundoPedido = matchesPed[1].slice(-1);
-        }
-        else if(arrayNumber.includes(Number(matchesPed[0].slice(-3,-2))) == false){
-            segundoPedido = matchesPed[1].slice(-2);
-        }
-        else if(arrayNumber.includes(Number(matchesPed[0].slice(-4,-3))) == false){
-            segundoPedido = matchesPed[1].slice(-3);
-        }
-        else if(arrayNumber.includes(Number(matchesPed[0].slice(-5,-4))) == false){
-            segundoPedido = matchesPed[1].slice(-4);
-        }
+            segundoPedido = matchesPed[1]
+            segundoPedido = segundoPedido.replaceAll(/\s/g,"")
+            segundoPedido = segundoPedido.replaceAll(/[a-z]/gi,"")
+            segundoPedido = segundoPedido.replaceAll(":","")
+            segundoPedido = segundoPedido.replaceAll("-","") 
 
-        if(primeiroPedido == segundoPedido){
-            resultadoPedido = 'PEDIDO: OK'
+            if(primeiroPedido == segundoPedido){
+                resultadoPedido = '--PEDIDO: OK'
+            }
+            else{
+                resultadoPedido = '--PEDIDO: ERRADO'
+            }
         }
-        else {
-            resultadoPedido = 'PEDIDO: ERRADO!!!'
+        else if(matchesPed.length > 2){
+            resultadoPedido = '--PEDIDO: ENCONTRADO 3 PEDIDOS'
+        }
+        else{
+            resultadoPedido = '--PEDIDO: NAO ENCONTRADO'
         }
     }
     catch{
-        resultadoPedido = 'PEDIDO: ERRADO!!!'
+        resultadoPedido = '--PEDIDO: ERRADO'
     }
-    }
+}    
 conferePedido()
 
 //--------------------------------------------OS--------------------------------
@@ -74,13 +64,13 @@ async function confereOs(){                                                //Con
     }
 
     if(primeiraOs == segundaOs){
-        resultadoOs = '    OS: OK'}
+        resultadoOs = '------OS: OK'}
     else {
-        resultadoOs = '    OS: ERRADA!!!'
+        resultadoOs = '------OS: ERRADA!!!'
     }
     }
     catch{
-        resultadoOs = '    OS: ERRADA!!!'     
+        resultadoOs = '------OS: ERRADA!!!'     
     }
 }
 confereOs()
@@ -106,10 +96,10 @@ async function confereNe(){
         if(texto.search(/robson/gi) > 0) {
             matchesNeRobson = texto.match(regexNeRobson)
             if(matchesNeRobson.length >= 1){
-                resultadoNe = 'EMPENHO: OK'
+                resultadoNe = '-EMPENHO: OK'
             }
             else{
-                resultadoNe = 'EMPENHO: ERRADO!!!'
+                resultadoNe = '-EMPENHO: ERRADO!!!'
             }  
         }
         if(texto.search(/mr[\s]pecas/gi) > 0) {
@@ -118,7 +108,7 @@ async function confereNe(){
                 resultadoNe = 'EMPENHO: OK'
             }
             else{
-                resultadoNe = 'EMPENHO: ERRADO!!!'
+                resultadoNe = '-EMPENHO: ERRADO!!!'
             }  
         }
         if(texto.search(/rabelo/gi) > 0) {
@@ -127,37 +117,37 @@ async function confereNe(){
                 resultadoNe = 'EMPENHO: OK'
             }
             else{
-                resultadoNe = 'EMPENHO: ERRADO!!!'
+                resultadoNe = '-EMPENHO: ERRADO!!!'
             }  
         }
         if(texto.search(/parts/gi) > 0) {
             matchesNeParts = texto.match(regexNeParts)
             if(matchesNeParts.length >= 1){
-                resultadoNe = 'EMPENHO: OK'
+                resultadoNe = '-EMPENHO: OK'
             }
             else{
-                resultadoNe = 'EMPENHO: ERRADO!!!'
+                resultadoNe = '-EMPENHO: ERRADO!!!'
             }  
         }
         if(texto.search(/alberto/gi) > 0) {
             matchesNeAlberto = texto.match(regexNeAlberto)
             if(matchesNeAlberto.length >= 1){
-                resultadoNe = 'EMPENHO: OK'
+                resultadoNe = '-EMPENHO: OK'
             }
             else{
-                resultadoNe = 'EMPENHO: ERRADO!!!'
+                resultadoNe = '-EMPENHO: ERRADO!!!'
             }              
         }
     } //fim try
     catch{
-        resultadoNe = 'EMPENHO: ERRADO!!!'
+        resultadoNe = '-EMPENHO: ERRADO!!!'
     }
 }
 confereNe()
 
 //------------------------------------PREFIXO------------------------------------
 var texto = document.body.innerHTML
-var regexPrefixo = /pref[:a-z\s]{0,9}[-]?[a-z-\s]{0,5}([\d]{1,3})/gi
+var regexPrefixo = /pref[:.a-z\s]{0,9}[-]?[a-z-\s]{0,5}([\d]{1,3})/gi
 var matchesPrefixo = texto.match(regexPrefixo);
 var primeiroPrefixo, segundoPrefixo
 var resultadoPrefixo
@@ -168,8 +158,10 @@ async function conferePrefixo(){
         primeiroPrefixo = matchesPrefixo[0].slice(-9);
         primeiroPrefixo = primeiroPrefixo.replace(/PREF/i,"");
         primeiroPrefixo = primeiroPrefixo.replace(/REF/i,"");
+        primeiroPrefixo = primeiroPrefixo.replace(/EF/i,"");
         primeiroPrefixo = primeiroPrefixo.replace(/XO/i,"");
         primeiroPrefixo = primeiroPrefixo.replace(/O:/,"");
+        primeiroPrefixo = primeiroPrefixo.replaceAll(".","");
         primeiroPrefixo = primeiroPrefixo.replaceAll("-","");
         primeiroPrefixo = primeiroPrefixo.replaceAll(":","");
         primeiroPrefixo = primeiroPrefixo.replaceAll(" ","");
@@ -178,8 +170,10 @@ async function conferePrefixo(){
         segundoPrefixo = matchesPrefixo[1].slice(-9);
         segundoPrefixo = segundoPrefixo.replace(/PREF/i,"");
         segundoPrefixo = segundoPrefixo.replace(/REF/i,"");
+        segundoPrefixo = segundoPrefixo.replace(/EF/i,"");
         segundoPrefixo = segundoPrefixo.replace(/XO/i,"");
         segundoPrefixo = segundoPrefixo.replace(/O:/,"");
+        segundoPrefixo = segundoPrefixo.replaceAll(".","");
         segundoPrefixo = segundoPrefixo.replaceAll("-","");
         segundoPrefixo = segundoPrefixo.replaceAll(":","");
         segundoPrefixo = segundoPrefixo.replaceAll(" ","");
@@ -253,14 +247,14 @@ async function conferePlaca(){
         }
 
         if(contPlaca >= 2){
-            resultadoPlaca = ' PLACA: OK'
+            resultadoPlaca = '---PLACA: OK'
         }
         else{
-            resultadoPlaca = ' PLACA: ERRADA!!!'
+            resultadoPlaca = '---PLACA: ERRADA!!!'
         }
     }
     catch{
-        resultadoPlaca = ' PLACA: ERRADA!!!'
+        resultadoPlaca = '---PLACA: ERRADA!!!'
     }
 }
 conferePlaca()
@@ -292,6 +286,7 @@ var regexJeep =/jeep/i
 var regexToyota =/toyota/i
 var regexScania =/scania/i
 var resultadoDesconto
+var resultadoMarca
 
 var matchesDesconto = texto.match(regexDesconto);
 var matchesPartslub = texto.match(regexPartsLub);
@@ -316,7 +311,6 @@ var matchesJeep =  texto.match(regexJeep);
 var matchesToyota =  texto.match(regexToyota);
 var matchesScania =  texto.match(regexScania);
 
-
 async function confereDesconto(){
     try{ 
         function verificaDesconto(marca,desc1,desc2,desc3,desc4,desc5){
@@ -328,19 +322,23 @@ async function confereDesconto(){
                 tentSoma = Number(tent1.length +tent2.length + tent3.length + tent4.length + tent5.length);
 
                 if (tentSoma == 2){
-                    resultadoDesconto = `MARCA ${marca} E DESCONTO: Ok`
+                    resultadoMarca = `---MARCA: ${marca}`
+                    resultadoDesconto = `DESCONTO: Ok`
                 } 
                 else if(tentSoma > 2){
-                    resultadoDesconto= `MAIS DE 2 DESCONTOS ENCONTRADOS`
+                    resultadoMarca = `---MARCA: ${marca}`
+                    resultadoDesconto= `DESCONTOS: MAIS DE 2 ENCONTRADOS`
                 }
                 else{
-                resultadoDesconto = 'Marca e desconto: ERRADOS!!!'
+                    resultadoMarca = `---MARCA: ${marca}`
+                    resultadoDesconto = 'DESCONTO: ERRADOS!!!'
                 }
             }
 
             //ALBERTO
-            if(matchesAgrale){                                                  //Agrale N tem desconto
-                resultadoDesconto = "MARCA AGRALE SEM DESCONTO"
+            if(matchesAgrale){                                    //Agrale N tem desconto
+                resultadoMarca= "---MARCA: AGRALE"                                                  
+                resultadoDesconto = "DESCONTO: SEM DESCONTO"
             }
             if(matchesIveco){                                                  
                 verificaDesconto("IVECO","52.00%","52,00%","52%","58.0%","58,0%")
@@ -373,113 +371,212 @@ async function confereDesconto(){
                 verificaDesconto("GM","65.00%","65,00%","65%","65,0%","65.0%")
             }
             //GILSON
-            if(matchesS10){                                                                     //verificar esse       
+            if(matchesS10 && matchesGilson){                                                                     //verificar esse       
                 verificaDesconto("GM Utilitario","65.00%","65,00%","65%","65.0%","65,0%")
             }
-            if(matchesVw){                                                                  
+            if(matchesVw && matchesGilson){                                                                  
                 verificaDesconto("VW","49.10%","49,10%","49,1%","41.1%")
             }
-            if(matchesCitroen){                                                                    
+            if(matchesCitroen && matchesGilson){                                                                    
                 verificaDesconto("CITROEN","43.10%","43,10%","43,1%","43.1%")
             }
             if(matchesFord && matchesGilson){                                                                
                 verificaDesconto("FORD UTILITARIO","43.10%","43,10%","43,1%","43.1%")
             }
-            if(matchesJeep){
+            if(matchesJeep && matchesGilson){
                 verificaDesconto("JEEP","49.10%","49,10%","49,1%","41.1%")
             }
             if(matchesMbPesado && matchesGilson){
                 verificaDesconto("MB PESADO","39.91%","39,91%")
             }
-            if(matchesSprinter){                                                      
+            if(matchesSprinter && matchesGilson){                                                      
                 verificaDesconto("MB UTILITARIO","47.51%","47,51%")
             }
-            if(matchesToyota){
+            if(matchesToyota && matchesGilson){
                 verificaDesconto("TOYOTA","36.10%","36,10%","36,1%","36.1%")
             }
-            if(matchesScania){
+            if(matchesScania && matchesGilson){
                 verificaDesconto("SCANIA","36.10%","36,10%","36,1%","36.1%")
             }
     }
     catch{
-        resultadoDesconto = "DESCONTO ERRADO"
+        resultadoMarca= "---MARCA: INDEFINIDA"
+        resultadoDesconto = "DESCONTO: ERRADO"
     } 
 }
 confereDesconto()
-
 
 //KM
 var texto = document.body.innerHTML;
 var regexKm = /[\d]{1,3}[.\s]?[\d]{3}\s?km|ltr">:\s[\d]{1,3}.[\d]{3}</gi
 var matchesKm = texto.match(regexKm);
 var matchesPossivelKm1, matchesPossivelKm2, matchesPossivelKm3
-var matchesKmTotal
+var matchesKmTotal=0
 var possivelKm1, possivelKm2, possivelKm3 
 var resultadoKm
 
-if(matchesKm.length == 2){
-    resultadoKm = 'KM: OK'
-    console.log(resultadoKm)
+async function confereKm(){
+    try{
+        if(matchesKm.length == 2){
+            resultadoKm = '------KM: OK'
+        }
+        else if(matchesKm.length > 2){
+            resultadoKm = '------KM: Encontrado mais de 2 Km`s'
+        }
+        else{                                                //Se Km = 1
+            possivelKm1 = matchesKm[0]                      //12345
+            possivelKm1 = possivelKm1.replaceAll(".","")
+            possivelKm1 = possivelKm1.replaceAll(" ","")
+            possivelKm1 = possivelKm1.replace(/km/i,"")
+            possivelKm1 = possivelKm1.replace(/ltr">:/i,"")
+            possivelKm1 = possivelKm1.replace(/</i,"")
+
+            possivelKm2 = matchesKm[0]                     //12.345
+            possivelKm2 = possivelKm2.replaceAll(" ","")
+            possivelKm2 = possivelKm2.replace(/km/i,"")
+            possivelKm2 = possivelKm2.replace(/ltr">:/i,"")
+            possivelKm2 = possivelKm2.replace(/</i,"")
+
+            possivelKm3 = matchesKm[0]                     //12 345
+            possivelKm3 = possivelKm3.replaceAll("."," ")
+            possivelKm3 = possivelKm3.replace(/km/i,"")
+            possivelKm3 = possivelKm3.replace(/ltr">:/i,"")
+            possivelKm3 = possivelKm3.replace(/</i,"")
+
+            matchesPossivelKm1 ? matchesKmTotal += Number(matchesPossivelKm1.length) : ""
+            matchesPossivelKm2 ? matchesKmTotal += Number(matchesPossivelKm2.length) : ""
+            matchesPossivelKm3 ? matchesKmTotal += Number(matchesPossivelKm3.length) : ""
+
+            resultadoKm = '------KM: OK'
+        }
+    }
+    catch{
+        resultadoKm= "------kM ERRADO"
+    }
 }
-else{
-    possivelKm1 = matchesKm[0]                      //12345
-    possivelKm1 = possivelKm1.replaceAll(".","")
-    possivelKm1 = possivelKm1.replaceAll(" ","")
-    possivelKm1 = possivelKm1.replace(/km/i,"")
-    possivelKm1 = possivelKm1.replace(/ltr">:/i,"")
-    possivelKm1 = possivelKm1.replace(/</i,"")
-    console.log(possivelKm1)
-
-    possivelKm2 = matchesKm[0]                     //12.345
-    possivelKm2 = possivelKm2.replaceAll(" ","")
-    possivelKm2 = possivelKm2.replace(/km/i,"")
-    possivelKm2 = possivelKm2.replace(/ltr">:/i,"")
-    possivelKm2 = possivelKm2.replace(/</i,"")
-    console.log(possivelKm2)
-
-    possivelKm3 = matchesKm[0]                     //12 345
-    possivelKm3 = possivelKm3.replaceAll("."," ")
-    possivelKm3 = possivelKm3.replace(/km/i,"")
-    possivelKm3 = possivelKm3.replace(/ltr">:/i,"")
-    possivelKm3 = possivelKm3.replace(/</i,"")
-    console.log(possivelKm3)
-
-    matchesPossivelKm1 = texto.match(possivelKm1)
-    matchesPossivelKm2 = texto.match(possivelKm2)
-    matchesPossivelKm3 = texto.match(possivelKm3)
-
-
-    console.log(matchesPossivelKm1)
-    console.log(matchesPossivelKm2)
-    console.log(matchesPossivelKm3)
-}
-
-
+confereKm()
 
 //ANO
+var texto = document.body.innerHTML;
+var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+var regexAno = /Ano\/Fabricação<\/span>[\w\s<>.,;:="'%*()\-\/]{0,210}\/span>/gi
+var matchesAno= texto.match(regexAno)
+var matchesAnoPag1
+var anoPadrao
+var possivelAno1, possivelAno2, possivelAno3, possivelAno4, possivelAno5
+var resultadoAno
+
+
+async function confereAno(){
+    try{
+        if(matchesAno){
+            anoPadrao = matchesAno[0]
+            anoPadrao = anoPadrao.replaceAll(/[a-zçã\s<>.,;:="'%*()\-\/]/gi,"")
+            anoPadrao = anoPadrao.slice(-4)
+
+            matchesAnoPag1= primeiraPagina.match(anoPadrao);
+
+            if(matchesAnoPag1.length == 1 && (anoPadrao == matchesAnoPag1[0])){
+                resultadoAno = "-----ANO: OK"
+            }
+            else if(matchesAnoPag1.length > 1){
+                resultadoAno = "-----ANO: MAIS DE 2 ANOS ENCONTRADOS"
+                
+            }
+            else{
+                resultadoAno = '-----ANO: ERRADO!!!'
+            }
+        }
+        else{
+            resultadoAno = "-----ANO: NAO ENCONTRADO NA OS"
+        }
+    }
+    catch{
+        resultadoAno = '-----ANO: ERRADO!!!'
+    }
+}
+confereAno()
+
+console.log(`O ano eh ${anoPadrao}`)
+console.log(resultadoAno)
 
 //CODIGO
+var texto = document.body.innerHTML;
+var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+var regexCodigo = /TROCAR<\/span><span style="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;"\srole="presentation"\sdir="ltr">\s<\/span><span\sstyle="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;\stransform:\sscaleX\(\d\.\d\d\d\d\d\);"\srole="presentation"\sdir="ltr">\w{1,15}/gi
+var matchCodigo = texto.match(regexCodigo)
+var arrayResposta =[]
+var nCodigos
+var resultadoCodigos
+var codigoEmRegex
+
+function confereCodigos(){
+    try{
+        if(matchCodigo){                                             //Se achar codigo na audatex faca isso
+            nCodigos= matchCodigo.length
+            for(let i=0; i<nCodigos; i++){              
+                matchCodigo[i] = matchCodigo[i].replace(/TROCAR<\/span><span style="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;"\srole="presentation"\sdir="ltr">\s<\/span><span\sstyle="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;\stransform:\sscaleX\(\d\.\d\d\d\d\d\);"\srole="presentation"\sdir="ltr">/i,"")
+                
+                codigoEmRegex= new RegExp(matchCodigo[i],"i")
+                if(primeiraPagina.match(codigoEmRegex) == null){           // Se o array tiver vazio quer dizer que n achou o codigo na primeira pagina
+                    arrayResposta.push(`Codigo ${matchCodigo[i]} ERRADO`)
+                    console.log(primeiraPagina.match(matchCodigo[i]))
+                }
+            }
+            if (arrayResposta.length == 0){
+                resultadoCodigos = '-CODIGOS: OK'
+            }
+            else{
+                    resultadoCodigos = `-CODIGOS: ${arrayResposta}`
+            }
+        }
+        else{
+            resultadoCodigos = '-CODIGOS: NAO ENCONTRADOS NA AUDATEX'  
+        }
+    }
+    catch{
+            resultadoCodigos = '-CODIGOS: NAO ENCONTRADOS NA AUDATEX'
+    }
+}
+confereCodigos()
+
+
+
+
+
+
 
 //MOSTRA RESULTADOS
-// console.log(matchesPed);
-// console.log(matchesOs)
 console.log("----------------RESULTADOS----------------")
 console.log(resultadoPedido);
 console.log(resultadoOs);
 console.log(resultadoNe);
 console.log(resultadoPrefixo)
 console.log(resultadoPlaca)
+console.log(resultadoMarca)
 console.log(resultadoDesconto)
+console.log(resultadoKm)
+console.log(resultadoAno)
+console.log(resultadoCodigos);
 console.log("-------------------------------------------")
 //FIM
 
 
 
+/*
 
+*PEDIDO: Não pode ter quebra de linha e prefixa ter o prefixo "ped" pra funcioanr
+*OS: Não pode ter quebra de linha e prefixa ter o prefixo "os" pra funcioanr
+*PREFIXO: Não pode ter quebra de linha e prefixa ter o prefixo"pref" pra funcioanr
+NE: Tem que ter o prefixo "NE" e no máximo 5 zeros entre o "NE" e o numero
+*PREFIXO: Não pode ter quebra de linha e prefixa ter o prefixo"pref" pra funcioanr
+PLACA: Pegado da Os
+MARCA: Tabela feito a mão 
+DESCONTO: tabela feito a mão 
+KM: Pegado da Os
+Ano: Pegado da Os, verifica somente a primeira página. Se tiver 2 anos da primeira página vai dar erro
+CODIGOS: A audatex tem que ser digital
 
+* São os ítens menos confiáveis
 
-
-
-
-
-
+*/
