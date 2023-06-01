@@ -41,3 +41,6 @@ confereAno()
 
 console.log(`O ano eh ${anoPadrao}`)
 console.log(resultadoAno)
+
+
+//metodo antigo

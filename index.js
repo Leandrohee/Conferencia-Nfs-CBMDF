@@ -41,9 +41,10 @@ async function conferePedido(){                                            //Con
 }    
 conferePedido()
 
+
 //--------------------------------------------OS--------------------------------
 var texto = document.body.innerHTML
-var RegexOs = /[\s>:-][\d]{4}[/]20[\d]{2}/gi
+var RegexOs = /[.\s>:-][\d]{4}[/]20[\d]{2}/gi
 var primeiraOs, segundaOs
 var matchesOs = texto.match(RegexOs);
 var resultadoOs
@@ -156,9 +157,12 @@ async function conferePrefixo(){
     try{
         matchesPrefixo = texto.match(regexPrefixo);
         primeiroPrefixo = matchesPrefixo[0].slice(-9);
+        primeiroPrefixo = primeiroPrefixo.replace(/PREFI/i,"");
         primeiroPrefixo = primeiroPrefixo.replace(/PREF/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/REF/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/EF/i,"");
+        primeiroPrefixo = primeiroPrefixo.replace(/PRE/i,"");
+        primeiroPrefixo = primeiroPrefixo.replace(/PRE/i,"");
+        primeiroPrefixo = primeiroPrefixo.replace(/PR/i,"");
+        primeiroPrefixo = primeiroPrefixo.replace(/IXO/i,"");
         primeiroPrefixo = primeiroPrefixo.replace(/XO/i,"");
         primeiroPrefixo = primeiroPrefixo.replace(/O:/,"");
         primeiroPrefixo = primeiroPrefixo.replaceAll(".","");
@@ -168,7 +172,7 @@ async function conferePrefixo(){
         primeiroPrefixo = primeiroPrefixo.replaceAll(/\s\s/g,"");
 
         segundoPrefixo = matchesPrefixo[1].slice(-9);
-        segundoPrefixo = segundoPrefixo.replace(/PREF/i,"");
+        segundoPrefixo = segundoPrefixo.replace(/PREFI/i,"");
         segundoPrefixo = segundoPrefixo.replace(/REF/i,"");
         segundoPrefixo = segundoPrefixo.replace(/EF/i,"");
         segundoPrefixo = segundoPrefixo.replace(/XO/i,"");
@@ -193,6 +197,9 @@ async function conferePrefixo(){
 
 }
 conferePrefixo()
+
+console.log(matchesPrefixo)
+console.log(resultadoPrefixo)
 
 //PLACA
 var texto = document.body.innerHTML
@@ -408,53 +415,58 @@ confereDesconto()
 
 //KM
 var texto = document.body.innerHTML;
-var regexKm = /[\d]{1,3}[.\s]?[\d]{3}\s?km|ltr">:\s[\d]{1,3}.[\d]{3}</gi
+var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+var regexKm = /hodômetro<\/span>[\w\s<>.,;:="'%*()\-\/]{0,200}\/span>/gi
 var matchesKm = texto.match(regexKm);
-var matchesPossivelKm1, matchesPossivelKm2, matchesPossivelKm3
+var matchesKm1, matchesKm2, matchesKm3
 var matchesKmTotal=0
 var possivelKm1, possivelKm2, possivelKm3 
 var resultadoKm
+var kmPadrao, kmOs
+
 
 async function confereKm(){
     try{
-        if(matchesKm.length == 2){
-            resultadoKm = '------KM: OK'
+        if(matchesKm){
+            kmOs = matchesKm[0]
+            kmOs = kmOs.replaceAll(/[a-zôçã\s<>,;="'%*()\-\/]/gi,"")
+
+            for(let i=0; i>-8; i--){
+                kmPadrao = kmOs.slice(i)
+                if(kmOs.slice(i-1,i) == ":"){
+                    break
+                }
+            }
+
+            possivelKm1 = kmPadrao.replace(".","")
+            possivelKm2 = kmPadrao.replace("."," ")
+            possivelKm3 = kmPadrao
+
+            matchesKm1 = primeiraPagina.match(possivelKm1)
+            matchesKm2 = primeiraPagina.match(possivelKm2)
+            matchesKm3 = primeiraPagina.match(possivelKm3)
+
+            matchesKm1 ? matchesKmTotal += matchesKm1.length : ""
+            matchesKm2 ? matchesKmTotal += matchesKm2length : ""
+            matchesKm3 ? matchesKmTotal += matchesKm3.length : ""
+
+            if(matchesKmTotal >= 1){
+                resultadoKm = '------KM: OK'
+            }
+            else{
+                resultadoKm = '------KM: ERRADO!!!'
+            }
         }
-        else if(matchesKm.length > 2){
-            resultadoKm = '------KM: Encontrado mais de 2 Km`s'
-        }
-        else{                                                //Se Km = 1
-            possivelKm1 = matchesKm[0]                      //12345
-            possivelKm1 = possivelKm1.replaceAll(".","")
-            possivelKm1 = possivelKm1.replaceAll(" ","")
-            possivelKm1 = possivelKm1.replace(/km/i,"")
-            possivelKm1 = possivelKm1.replace(/ltr">:/i,"")
-            possivelKm1 = possivelKm1.replace(/</i,"")
-
-            possivelKm2 = matchesKm[0]                     //12.345
-            possivelKm2 = possivelKm2.replaceAll(" ","")
-            possivelKm2 = possivelKm2.replace(/km/i,"")
-            possivelKm2 = possivelKm2.replace(/ltr">:/i,"")
-            possivelKm2 = possivelKm2.replace(/</i,"")
-
-            possivelKm3 = matchesKm[0]                     //12 345
-            possivelKm3 = possivelKm3.replaceAll("."," ")
-            possivelKm3 = possivelKm3.replace(/km/i,"")
-            possivelKm3 = possivelKm3.replace(/ltr">:/i,"")
-            possivelKm3 = possivelKm3.replace(/</i,"")
-
-            matchesPossivelKm1 ? matchesKmTotal += Number(matchesPossivelKm1.length) : ""
-            matchesPossivelKm2 ? matchesKmTotal += Number(matchesPossivelKm2.length) : ""
-            matchesPossivelKm3 ? matchesKmTotal += Number(matchesPossivelKm3.length) : ""
-
-            resultadoKm = '------KM: OK'
-        }
+        else{
+            resultadoKm = '------KM: NÃO ENCONTRADO NA OS'
+        }   
     }
     catch{
-        resultadoKm= "------kM ERRADO"
+        resultadoKm = '------KM: NÃO ENCONTRADO NA OS'
     }
 }
 confereKm()
+
 
 //ANO
 var texto = document.body.innerHTML;
@@ -480,8 +492,7 @@ async function confereAno(){
                 resultadoAno = "-----ANO: OK"
             }
             else if(matchesAnoPag1.length > 1){
-                resultadoAno = "-----ANO: MAIS DE 2 ANOS ENCONTRADOS"
-                
+                resultadoAno = "-----ANO: MAIS DE 2 ANOS ENCONTRADOS"   
             }
             else{
                 resultadoAno = '-----ANO: ERRADO!!!'
@@ -497,8 +508,6 @@ async function confereAno(){
 }
 confereAno()
 
-console.log(`O ano eh ${anoPadrao}`)
-console.log(resultadoAno)
 
 //CODIGO
 var texto = document.body.innerHTML;
