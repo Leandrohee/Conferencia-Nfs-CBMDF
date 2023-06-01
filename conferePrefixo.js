@@ -1,7 +1,7 @@
 var texto = document.body.innerHTML
 var regexPrefixo = /Prefixo<\/span>[\w\s<>.,;:="'%*()\-\/]{0,210}:\s[\w]{2,4}\s-\s[\d]{1,4}</gi
 var matchesPrefixo = texto.match(regexPrefixo);
-var prefixoPadrao, prefixoOs, prefixoTotal=[]
+var prefixoPadrao, prefixoOs, prefixoTotal=0
 var primeiroPrefixo, segundoPrefixo, terceiroPrefixo,quartoPrefixo,quintoPrefixo,sextoPrefixo,setimoPrefixo
 var matches1Prefixo, matches2Prefixo, matches3Prefixo, matches4Prefixo,matches5Prefixo,matches6Prefixo,matches7Prefixo
 var prefixo1, prefixo2, prefixo3, prefixo4, prefixo5, prefixo6,prefixo7
@@ -49,24 +49,24 @@ async function conferePrefixo(){
             matches7Prefixo = texto.match(prefixo7)
 
             //contando quantas vezes o prefixo foi encontrado em todas as suas variações
-            // matches1Prefixo ? prefixoTotal += matches1Prefixo.length : ""
-            // matches2Prefixo ? prefixoTotal += matches2Prefixo.length : ""
-            // matches3Prefixo ? prefixoTotal += matches3Prefixo.length : ""
-            // matches4Prefixo ? prefixoTotal += matches4Prefixo.length : ""
-            // matches5Prefixo ? prefixoTotal += matches5Prefixo.length : ""
-            // matches6Prefixo ? prefixoTotal += matches6Prefixo.length : ""
-            // matches7Prefixo ? prefixoTotal += matches7Prefixo.length : ""
+            matches1Prefixo ? prefixoTotal += matches1Prefixo.length : ""
+            matches2Prefixo ? prefixoTotal += matches2Prefixo.length : ""
+            matches3Prefixo ? prefixoTotal += matches3Prefixo.length : ""
+            matches4Prefixo ? prefixoTotal += matches4Prefixo.length : ""
+            matches5Prefixo ? prefixoTotal += matches5Prefixo.length : ""
+            matches6Prefixo ? prefixoTotal += matches6Prefixo.length : ""
+            matches7Prefixo ? prefixoTotal += matches7Prefixo.length : ""
 
-            matches1Prefixo ? prefixoTotal.push(matches1Prefixo) : ""
-            matches2Prefixo ? prefixoTotal.push(matches2Prefixo) : ""
-            matches3Prefixo ? prefixoTotal.push(matches3Prefixo) : ""
-            matches4Prefixo ? prefixoTotal.push(matches4Prefixo) : ""
-            matches5Prefixo ? prefixoTotal.push(matches5Prefixo) : ""
-            matches6Prefixo ? prefixoTotal.push(matches6Prefixo) : ""
-            matches7Prefixo ? prefixoTotal.push(matches7Prefixo) : ""
+            // matches1Prefixo ? prefixoTotal.push(matches1Prefixo) : ""
+            // matches2Prefixo ? prefixoTotal.push(matches2Prefixo) : ""
+            // matches3Prefixo ? prefixoTotal.push(matches3Prefixo) : ""
+            // matches4Prefixo ? prefixoTotal.push(matches4Prefixo) : ""
+            // matches5Prefixo ? prefixoTotal.push(matches5Prefixo) : ""
+            // matches6Prefixo ? prefixoTotal.push(matches6Prefixo) : ""
+            // matches7Prefixo ? prefixoTotal.push(matches7Prefixo) : ""
 
 
-            if(prefixoTotal.length >= 3){
+            if(prefixoTotal >= 3){
                 resultadoPrefixo = "-PREFIXO: OK"
             }
             else{
