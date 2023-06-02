@@ -43,7 +43,7 @@ conferePedido()
 
 
 //--------------------------------------------OS--------------------------------
-var texto = document.body.innerHTML
+// var texto = document.body.innerHTML
 var RegexOs = /[.\s>:-][\d]{4}[/]20[\d]{2}/gi
 var primeiraOs, segundaOs
 var matchesOs = texto.match(RegexOs);
@@ -77,7 +77,7 @@ async function confereOs(){                                                //Con
 confereOs()
 
 //----------------------------------NOTA DE EMPENHO-----------------------------
-var texto = document.body.innerHTML
+// var texto = document.body.innerHTML
 var fornecedor
 var resultadoNe
 var regexNeAlberto = /2023NE[0]{0,5}67/gi            //2023NE000067
@@ -147,7 +147,7 @@ async function confereNe(){
 confereNe()
 
 //------------------------------------PREFIXO------------------------------------
-var texto = document.body.innerHTML
+// var texto = document.body.innerHTML
 var regexPrefixo = /Prefixo<\/span>[\w\s<>.,;:="'%*()\-\/]{0,210}:\s[\w]{2,4}\s-\s[\d]{1,4}</gi
 var matchesPrefixo = texto.match(regexPrefixo);
 var prefixoPadrao, prefixoOs, prefixoTotal=0
@@ -223,11 +223,9 @@ async function conferePrefixo(){
 }
 conferePrefixo()
 
-console.log(matchesPrefixo)
-console.log(resultadoPrefixo)
 
-//PLACA
-var texto = document.body.innerHTML
+//-------------------------------------------------PLACA
+// var texto = document.body.innerHTML
 var regexPlacaSis = /:\s[A-Z]{3}\s[\d]{4}/g
 var matchesPlacaSis = texto.match(regexPlacaSis)
 var modeloPlaca1, modeloPlaca2,modeloPlaca3,modeloPlaca4,modeloPlaca5, modeloPlaca6
@@ -292,8 +290,8 @@ async function conferePlaca(){
 conferePlaca()
 
 
-//MARCA e DESCONO
-var texto = document.body.innerHTML
+//---------------------------------------MARCA e DESCONO
+// var texto = document.body.innerHTML
 var tent1, tent2, tent3, tent4,tent5, tentSoma
 var regexDesconto = /[\d]{1,2}[.,]?[\d]{0,2}%/g
 var regexRenault = /RENAULT/i
@@ -442,7 +440,8 @@ async function confereDesconto(){
 }
 confereDesconto()
 
-var texto = document.body.innerHTML
+//------------------------------------------CONTRATO-----------
+// var texto = document.body.innerHTML
 // var regexPartsLub = /parts\slub/i
 // var regexGilson = /rabelo\sco/i
 // var regexRobson = /robson/i
@@ -493,8 +492,8 @@ function confereContrato(){
 confereContrato()
 
 
-//KM
-var texto = document.body.innerHTML;
+//-------------------------------------------------KM------------
+// var texto = document.body.innerHTML;
 var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
 var regexKm = /hodômetro<\/span>[\w\s<>.,;:="'%*()\-\/]{0,200}\/span>/gi
 var matchesKm = texto.match(regexKm);
@@ -548,9 +547,9 @@ async function confereKm(){
 confereKm()
 
 
-//ANO
-var texto = document.body.innerHTML;
-var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+//---------------------------------------------ANO---------------
+// var texto = document.body.innerHTML;
+// var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
 var regexAno = /Ano\/Fabricação<\/span>[\w\s<>.,;:="'%*()\-\/]{0,210}\/span>/gi
 var matchesAno= texto.match(regexAno)
 var matchesAnoPag1
@@ -589,9 +588,9 @@ async function confereAno(){
 confereAno()
 
 
-//CODIGO
-var texto = document.body.innerHTML;
-var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+//----------------------------CODIGO---------------------------
+// var texto = document.body.innerHTML;
+// var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
 var regexCodigo = /TROCAR<\/span><span style="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;"\srole="presentation"\sdir="ltr">\s<\/span><span\sstyle="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;\stransform:\sscaleX\(\d\.\d\d\d\d\d\);"\srole="presentation"\sdir="ltr">\w{1,15}/gi
 var matchCodigo = texto.match(regexCodigo)
 var arrayResposta =[]
@@ -629,7 +628,117 @@ function confereCodigos(){
 }
 confereCodigos()
 
+//-------------------------------VALOR NF---------------
+// var texto = document.body.innerHTML;
+// var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+var regexValorAud = /TROCAR<[\w\s\Á\É\Í\Ó\Ú\Ã\Õ\Ç\?<>.,;ç:="'%*()\-\/]{0,2000}>[\d]{1,2}.?[\d]{1,3},[\d]{1,2}</gi
+var regexValorNfBruto =/TOTAL DOS PRODUTOS<[\w\s<>.,;:="'%*()\-\/]{0,300}>[\d]{1,2}.?[\d]{1,3},[\d]{1,2}</i
+var regexValorNfDesconto = /TOTAL\sDA\sNOTA<[\w\s<>.,;:="'%*()\-\/]{0,300}>[\d]{1,2}.?[\d]{1,3},[\d]{1,2}</i
+var matchesValorAud = texto.match(regexValorAud);
+var matchesValorNfBruto = texto.match(regexValorNfBruto);
+var matchesValorNfDesconto = texto.match(regexValorNfDesconto);
+var matchesAudNaNF = []
+var nfBruto, nfDesconto, nfTeste, valorAud = []
+var resultadoValorNf
 
+async function confereValorNf(){
+    try{
+        if(matchesValorAud){
+            //Reervando o valor da Nf Bruta
+                    for(let i=0; i>-10; i--){
+                        nfBruto= matchesValorNfBruto[0].slice(i)
+                        if(matchesValorNfBruto[0].slice(i-1,i) == "\""){
+                            break
+                        }
+                    }
+
+                    for(let i=0; i>-10; i--){
+                        nfDesconto= matchesValorNfDesconto[0].slice(i)
+                        if(matchesValorNfDesconto[0].slice(i-1,i) == "\""){
+                            break
+                        }
+                    }
+
+                    //Array para as peças audatex
+                    for(let a=0; a < matchesValorAud.length;a++){
+                        for(let i=0; i>-10; i--){
+                            valorAud[a]= matchesValorAud[a].slice(i)
+                            if(matchesValorAud[a].slice(i-1,i) == "\""){
+                            break
+                            }
+                        }
+
+                        valorAud[a] = valorAud[a].replaceAll(/<|>/g,"")
+                        primeiraPagina.match(valorAud[a]) ? matchesAudNaNF.push(true) : ''
+                        
+                        valorAud[a] = valorAud[a].replaceAll(/\./g,"")
+                        valorAud[a] = valorAud[a].replaceAll(",",".")
+                        valorAud[a] = Number(valorAud[a])
+                    
+                    }
+
+                    nfBruto = nfBruto.replaceAll(/<|>|\./g,"")
+                    nfBruto = nfBruto.replaceAll(",",".")
+                    nfBruto = Number(nfBruto)
+
+                    nfDesconto = nfDesconto.replaceAll(/<|>|\./g,"")
+                    nfDesconto = nfDesconto.replaceAll(",",".")
+                    nfDesconto = Number(nfDesconto)
+
+                    if(matchesAudNaNF.length == matchesValorAud.length){
+                        matchesAgrale ? resultadoValorNf: "---VALOR: AGRALE NAO CALCULA"
+                        if(matchesIveco){
+                            nfTeste = nfBruto * (1-0.52)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesBmw){
+                            nfTeste = nfBruto * (1-0.07)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesRenault){
+                            nfTeste = nfBruto * (1-0.58)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesFord && matchesPartslub){
+                            nfTeste = nfBruto * (1-0.59)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesYamaha){
+                            nfTeste = nfBruto * (1-0.55)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesHonda){
+                            nfTeste = nfBruto * (1-0.45)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesFiat){
+                            nfTeste = nfBruto * (1-0.692)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesMitsubishi){
+                            nfTeste = nfBruto * (1-0.61)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                        else if(matchesCruze && matchesRobson){
+                            nfTeste = nfBruto * (1-0.65)
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                        }
+                    }
+                    else{
+                        resultadoValorNf = `----VALOR: NAO FOI ENCONTRADO UM VALOR NA NF`
+                    }
+        }
+        else{
+            resultadoValorNf = `----VALOR: NAO FOI ENCONTRADO AUDATEX`
+        }
+        
+    }
+    catch{
+        resultadoValorNf = `----VALOR: NAO FOI ENCONTRADO UM VALOR NA NF`
+    }
+
+}
+confereValorNf()
 
 
 
@@ -647,6 +756,7 @@ console.log(resultadoContrato)
 console.log(resultadoKm)
 console.log(resultadoAno)
 console.log(resultadoCodigos);
+console.log(resultadoValorNf)
 console.log("-------------------------------------------")
 //FIM
 
