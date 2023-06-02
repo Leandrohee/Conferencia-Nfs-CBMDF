@@ -764,18 +764,3 @@ console.log("-------------------------------------------")
 
 /*
 
-*PEDIDO: Não pode ter quebra de linha e prefixa ter o prefixo "ped" pra funcioanr
-*OS: Não pode ter quebra de linha e prefixa ter o prefixo "os" pra funcioanr
-*PREFIXO: Não pode ter quebra de linha e prefixa ter o prefixo"pref" pra funcioanr
-NE: Tem que ter o prefixo "NE" e no máximo 5 zeros entre o "NE" e o numero
-*PREFIXO: Não pode ter quebra de linha e prefixa ter o prefixo"pref" pra funcioanr
-PLACA: Pegado da Os
-MARCA: Tabela feito a mão 
-DESCONTO: tabela feito a mão 
-KM: Pegado da Os
-Ano: Pegado da Os, verifica somente a primeira página. Se tiver 2 anos da primeira página vai dar erro
-CODIGOS: A audatex tem que ser digital
-
-* São os ítens menos confiáveis
-
-*/
