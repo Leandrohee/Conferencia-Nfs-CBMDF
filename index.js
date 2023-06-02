@@ -589,9 +589,9 @@ confereAno()
 
 
 //----------------------------CODIGO---------------------------
-// var texto = document.body.innerHTML;
-// var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
-var regexCodigo = /TROCAR<\/span><span style="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;"\srole="presentation"\sdir="ltr">\s<\/span><span\sstyle="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;\stransform:\sscaleX\(\d\.\d\d\d\d\d\);"\srole="presentation"\sdir="ltr">\w{1,15}/gi
+var texto = document.body.innerHTML;
+var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+var regexCodigo = /TROCAR<[\w\s<>.,;:="'%*()\-\/]{0,500}>\w{1,15}/gi
 var matchCodigo = texto.match(regexCodigo)
 var arrayResposta =[]
 var nCodigos
@@ -627,6 +627,8 @@ function confereCodigos(){
     }
 }
 confereCodigos()
+
+console.log(resultadoCodigos)
 
 //-------------------------------VALOR NF---------------
 // var texto = document.body.innerHTML;
