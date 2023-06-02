@@ -148,53 +148,78 @@ confereNe()
 
 //------------------------------------PREFIXO------------------------------------
 var texto = document.body.innerHTML
-var regexPrefixo = /pref[:.a-z\s]{0,9}[-]?[a-z-\s]{0,5}([\d]{1,3})/gi
+var regexPrefixo = /Prefixo<\/span>[\w\s<>.,;:="'%*()\-\/]{0,210}:\s[\w]{2,4}\s-\s[\d]{1,4}</gi
 var matchesPrefixo = texto.match(regexPrefixo);
-var primeiroPrefixo, segundoPrefixo
+var prefixoPadrao, prefixoOs, prefixoTotal=0
+var primeiroPrefixo, segundoPrefixo, terceiroPrefixo,quartoPrefixo,quintoPrefixo,sextoPrefixo,setimoPrefixo
+var matches1Prefixo, matches2Prefixo, matches3Prefixo, matches4Prefixo,matches5Prefixo,matches6Prefixo,matches7Prefixo
+var prefixo1, prefixo2, prefixo3, prefixo4, prefixo5, prefixo6,prefixo7
 var resultadoPrefixo
 
 async function conferePrefixo(){
     try{
-        matchesPrefixo = texto.match(regexPrefixo);
-        primeiroPrefixo = matchesPrefixo[0].slice(-9);
-        primeiroPrefixo = primeiroPrefixo.replace(/PREFI/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/PREF/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/PRE/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/PRE/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/PR/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/IXO/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/XO/i,"");
-        primeiroPrefixo = primeiroPrefixo.replace(/O:/,"");
-        primeiroPrefixo = primeiroPrefixo.replaceAll(".","");
-        primeiroPrefixo = primeiroPrefixo.replaceAll("-","");
-        primeiroPrefixo = primeiroPrefixo.replaceAll(":","");
-        primeiroPrefixo = primeiroPrefixo.replaceAll(" ","");
-        primeiroPrefixo = primeiroPrefixo.replaceAll(/\s\s/g,"");
+        if(matchesPrefixo){
+            //Transforma a regex da Os em um prefixo padrao
+            prefixoOs = matchesPrefixo[0]
+            prefixoOs = prefixoOs.replace(/[\s<>.,;="'%*()\/]/gi,"")
 
-        segundoPrefixo = matchesPrefixo[1].slice(-9);
-        segundoPrefixo = segundoPrefixo.replace(/PREFI/i,"");
-        segundoPrefixo = segundoPrefixo.replace(/REF/i,"");
-        segundoPrefixo = segundoPrefixo.replace(/EF/i,"");
-        segundoPrefixo = segundoPrefixo.replace(/XO/i,"");
-        segundoPrefixo = segundoPrefixo.replace(/O:/,"");
-        segundoPrefixo = segundoPrefixo.replaceAll(".","");
-        segundoPrefixo = segundoPrefixo.replaceAll("-","");
-        segundoPrefixo = segundoPrefixo.replaceAll(":","");
-        segundoPrefixo = segundoPrefixo.replaceAll(" ","");
-        segundoPrefixo = segundoPrefixo.replaceAll(/\s\s/g,"");
+            for(let i=0; i>-8; i--){
+                prefixoPadrao = prefixoOs.slice(i)
+                if(prefixoOs.slice(i-1,i) == ":"){
+                    break
+                }
+            }
 
+            //transformando o padrao em 7 diferentes variantes
+            primeiroPrefixo = prefixoPadrao                     //AO-56
+            segundoPrefixo = prefixoPadrao.replace("-","\\.")     //AO.56
+            terceiroPrefixo = prefixoPadrao.replace("-"," ")    //AO 56
+            quartoPrefixo = prefixoPadrao.replace("-","")       //AO56
+            quintoPrefixo = prefixoPadrao.replace("-"," - ")    //AO - 56
+            sextoPrefixo = prefixoPadrao.replace("-","- ")     //AO- 56
+            setimoPrefixo = prefixoPadrao.replace("-"," -")      //AO -56
 
-        if (primeiroPrefixo == segundoPrefixo){
-            resultadoPrefixo = 'PREFIXO: OK'
+            //transformando as varianes em regEx para ler tb maiusculo e minusculo
+            prefixo1 = new RegExp(primeiroPrefixo, "gi");
+            prefixo2 = new RegExp(segundoPrefixo, "gi");
+            prefixo3 = new RegExp(terceiroPrefixo, "gi");
+            prefixo4 = new RegExp(quartoPrefixo, "gi");
+            prefixo5 = new RegExp(quintoPrefixo, "gi");
+            prefixo6 = new RegExp(sextoPrefixo, "gi");
+            prefixo7 = new RegExp(setimoPrefixo, "gi");
+
+            //Procurando as regex no pdf
+            matches1Prefixo = texto.match(prefixo1)
+            matches2Prefixo = texto.match(prefixo2)
+            matches3Prefixo = texto.match(prefixo3)
+            matches4Prefixo = texto.match(prefixo4)
+            matches5Prefixo = texto.match(prefixo5)
+            matches6Prefixo = texto.match(prefixo6)
+            matches7Prefixo = texto.match(prefixo7)
+
+            //contando quantas vezes o prefixo foi encontrado em todas as suas variações
+            matches1Prefixo ? prefixoTotal += matches1Prefixo.length : ""
+            matches2Prefixo ? prefixoTotal += matches2Prefixo.length : ""
+            matches3Prefixo ? prefixoTotal += matches3Prefixo.length : ""
+            matches4Prefixo ? prefixoTotal += matches4Prefixo.length : ""
+            matches5Prefixo ? prefixoTotal += matches5Prefixo.length : ""
+            matches6Prefixo ? prefixoTotal += matches6Prefixo.length : ""
+            matches7Prefixo ? prefixoTotal += matches7Prefixo.length : ""
+
+            if(prefixoTotal >= 3){
+                resultadoPrefixo = "-PREFIXO: OK"
+            }
+            else{
+                resultadoPrefixo = "-PREFIXO: ERRADO!!!"
+            }
         }
         else{
-            resultadoPrefixo = 'PREFIXO: ERRADO!!!'
-        }  
+            resultadoPrefixo = "-PREFIXO: NÃO ENCONTRADO NA OS"
+        }
     }
     catch{
-        resultadoPrefixo = 'PREFIXO: ERRADO!!!'
+        resultadoPrefixo = "-PREFIXO: NÃO ENCONTRADO NA OS"
     }
-
 }
 conferePrefixo()
 
@@ -276,6 +301,8 @@ var regexFord = /FORD/i
 var regexPartsLub = /parts\slub/i
 var regexGilson = /rabelo\sco/i
 var regexRobson = /robson/i
+var regexErenice = /MR\sPECAS/i
+var regexAlberto = /ALBERTO/i
 var regexYamaha = /Yamaha/i
 var regexBmw = /bmw/i
 var regexAgrale = /Agrale/i
@@ -299,6 +326,8 @@ var matchesDesconto = texto.match(regexDesconto);
 var matchesPartslub = texto.match(regexPartsLub);
 var matchesGilson = texto.match(regexGilson);
 var matchesRobson = texto.match(regexRobson);
+var matchesErenice = texto.match(regexErenice);
+var matchesAlberto = texto.match(regexAlberto);
 var matchesRenault =  texto.match(regexRenault);
 var matchesFord =  texto.match(regexFord);
 var matchesYamaha =  texto.match(regexYamaha);
@@ -328,14 +357,14 @@ async function confereDesconto(){
                 tent5 = matchesDesconto.filter(element => element == desc5)
                 tentSoma = Number(tent1.length +tent2.length + tent3.length + tent4.length + tent5.length);
 
-                if (tentSoma == 2){
+                if (tentSoma >= 2){
                     resultadoMarca = `---MARCA: ${marca}`
                     resultadoDesconto = `DESCONTO: Ok`
                 } 
-                else if(tentSoma > 2){
-                    resultadoMarca = `---MARCA: ${marca}`
-                    resultadoDesconto= `DESCONTOS: MAIS DE 2 ENCONTRADOS`
-                }
+                // else if(tentSoma > 2){
+                //     resultadoMarca = `---MARCA: ${marca}`
+                //     resultadoDesconto= `DESCONTOS: MAIS DE 2 ENCONTRADOS`
+                // }
                 else{
                     resultadoMarca = `---MARCA: ${marca}`
                     resultadoDesconto = 'DESCONTO: ERRADOS!!!'
@@ -412,6 +441,57 @@ async function confereDesconto(){
     } 
 }
 confereDesconto()
+
+var texto = document.body.innerHTML
+// var regexPartsLub = /parts\slub/i
+// var regexGilson = /rabelo\sco/i
+// var regexRobson = /robson/i
+// var regexErenice = /MR\sPECAS/i
+// var regexAlberto = /ALBERTO/i
+// var matchesPartslub = texto.match(regexPartsLub);
+// var matchesGilson = texto.match(regexGilson);
+// var matchesRobson = texto.match(regexRobson);
+// var matchesErenice = texto.match(regexErenice);
+// var matchesAlberto = texto.match(regexAlberto);
+var regexContratoAlberto = /27\/2021/gi
+var regexContratoErenice = /37\/2018/gi
+var regexContratoGilson = /29\/2022/gi
+var regexContratoParts = /30\/2021/gi
+var regexContratoRobson = /29\/2021/gi
+var matchesContratoAlberto = texto.match(regexContratoAlberto);
+var matchesContratoErenice = texto.match(regexContratoErenice);
+var matchesContratoGilson = texto.match(regexContratoGilson);
+var matchesContratoParts = texto.match(regexContratoParts);
+var matchesContratoRobson = texto.match(regexContratoRobson);
+var resultadoContrato
+
+function confereContrato(){
+    try{
+        if(matchesAlberto && matchesContratoAlberto){
+            resultadoContrato = `CONTRATO: OK ${matchesContratoAlberto[0]}`
+        }
+        else if(matchesErenice && matchesContratoErenice){
+            resultadoContrato = `CONTRATO: OK ${matchesContratoErenice[0]}`
+        }
+        else if(matchesGilson && matchesContratoGilson){
+            resultadoContrato = `CONTRATO: OK ${matchesContratoGilson[0]}`
+        } 
+        else if(matchesPartslub && matchesContratoParts){
+            resultadoContrato = `CONTRATO: OK ${matchesContratoParts[0]}`
+        } 
+        else if(matchesRobson && matchesContratoRobson){
+            resultadoContrato = `CONTRATO: OK ${matchesContratoRobson[0]}`
+        } 
+        else{
+            resultadoContrato = 'CONTRATO: ERRADO!!!'
+        } 
+    }
+    catch{
+        resultadoContrato = 'CONTRATO: ERRADO!!!'
+    }
+}
+confereContrato()
+
 
 //KM
 var texto = document.body.innerHTML;
@@ -554,7 +634,6 @@ confereCodigos()
 
 
 
-
 //MOSTRA RESULTADOS
 console.log("----------------RESULTADOS----------------")
 console.log(resultadoPedido);
@@ -564,6 +643,7 @@ console.log(resultadoPrefixo)
 console.log(resultadoPlaca)
 console.log(resultadoMarca)
 console.log(resultadoDesconto)
+console.log(resultadoContrato)
 console.log(resultadoKm)
 console.log(resultadoAno)
 console.log(resultadoCodigos);
