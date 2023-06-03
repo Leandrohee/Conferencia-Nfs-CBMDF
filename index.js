@@ -589,11 +589,12 @@ confereAno()
 
 
 //----------------------------CODIGO---------------------------
-var texto = document.body.innerHTML;
+// var texto = document.body.innerHTML;
 var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
-var regexCodigo = /TROCAR<[\w\s<>.,;:="'%*()\-\/]{0,500}>\w{1,15}/gi
+var regexCodigo = /TROCAR<[\w\s<>.,;:="'%*()\-\/]{0,500}>[\w-]{1,20}/gi
 var matchCodigo = texto.match(regexCodigo)
 var arrayResposta =[]
+var codigoPadrao=[]
 var nCodigos
 var resultadoCodigos
 var codigoEmRegex
@@ -602,20 +603,25 @@ function confereCodigos(){
     try{
         if(matchCodigo){                                             //Se achar codigo na audatex faca isso
             nCodigos= matchCodigo.length
-            for(let i=0; i<nCodigos; i++){              
-                matchCodigo[i] = matchCodigo[i].replace(/TROCAR<\/span><span style="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;"\srole="presentation"\sdir="ltr">\s<\/span><span\sstyle="left:\s\d\d\.\d\d%;\stop:\s\d\d\.\d\d%;\sfont-size:\scalc\(var\(--scale-factor\)\*\d\.\d\dpx\);\sfont-family:\sserif;\stransform:\sscaleX\(\d\.\d\d\d\d\d\);"\srole="presentation"\sdir="ltr">/i,"")
-                
-                codigoEmRegex= new RegExp(matchCodigo[i],"i")
+            for(let i=0; i<nCodigos; i++){
+                for(let a=0; a>-20; a--){
+                    codigoPadrao[i] = matchCodigo[i].slice(a)
+                    if(matchCodigo[i].slice(a-1,a) == ">"){
+                        break
+                    }
+                }
+                codigoPadrao[i] = codigoPadrao[i].replaceAll(/[-]/gi,"")
+                               
+                codigoEmRegex= new RegExp(codigoPadrao[i],"i")
                 if(primeiraPagina.match(codigoEmRegex) == null){           // Se o array tiver vazio quer dizer que n achou o codigo na primeira pagina
-                    arrayResposta.push(`Codigo ${matchCodigo[i]} ERRADO`)
-                    console.log(primeiraPagina.match(matchCodigo[i]))
+                    arrayResposta.push(`Codigo ${codigoPadrao[i]} ERRADO`)
                 }
             }
             if (arrayResposta.length == 0){
                 resultadoCodigos = '-CODIGOS: OK'
             }
             else{
-                    resultadoCodigos = `-CODIGOS: ${arrayResposta}`
+                resultadoCodigos = `-CODIGOS: ${arrayResposta}`
             }
         }
         else{
@@ -627,8 +633,6 @@ function confereCodigos(){
     }
 }
 confereCodigos()
-
-console.log(resultadoCodigos)
 
 //-------------------------------VALOR NF---------------
 // var texto = document.body.innerHTML;
