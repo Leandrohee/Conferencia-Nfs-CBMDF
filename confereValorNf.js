@@ -144,7 +144,7 @@ async function confereValorNf(){
                         }
                     }
                     else{
-                        resultadoValorNf = `----VALOR: NAO FOI ENCONTRADO UM VALOR NA NF`
+                        resultadoValorNf = `----VALOR: O VALOR DE ALGUM CODIGO NA NF ESTA ERRADO`
                     }
         }
         else{
