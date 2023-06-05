@@ -129,7 +129,7 @@ async function confereOs(){
                 resultadoOs = `------OS: OK                    (${osPadrao})`
             }
             else{
-                resultadoOs = `------OS: ERRADA, NAO ENCONTRADA A OS ${matchOsNaNf} NA NF`
+                resultadoOs = `------OS: ERRADA, NAO ENCONTRADA A OS ${osPadrao} NA NF`
             }
         }
         else{
@@ -437,8 +437,8 @@ async function confereDesconto(){
 
             //ALBERTO
             if(matchesAgrale){                                    //Agrale N tem desconto
-                resultadoMarca= "---MARCA: AGRALE"                                                  
-                resultadoDesconto = "DESCONTO: SEM DESCONTO"
+                resultadoMarca= "---MARCA: OK                    (AGRALE)"                                                  
+                resultadoDesconto = "DESCONTO: OK                    (SEM DESCONTO)"
             }
             if(matchesIveco){                                                  
                 verificaDesconto("IVECO","52.00%","52,00%","52%","58.0%","58,0%")
@@ -533,7 +533,7 @@ var resultadoContrato
 function confereContrato(){
     try{
         if(matchesAlberto && matchesContratoAlberto){
-            resultadoContrato = `CONTRATO: OK                    ( ${matchesContratoAlberto[0]})`
+            resultadoContrato = `CONTRATO: OK                    (${matchesContratoAlberto[0]})`
         }
         else if(matchesErenice && matchesContratoErenice){
             resultadoContrato = `CONTRATO: OK                    (${matchesContratoErenice[0]})`
