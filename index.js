@@ -1,45 +1,104 @@
+/*
+            |--------------------------------------------------|
+            |                                                  |
+            |   PARA ESSE CÓDIGO FUNCIONAR É NECESSÁRIO QUE:   |
+            |                                                  |
+            |    --> TODAS AS PÁGINAS ESTEJAM EM PDF DIGITAL   |
+            |    --> A NF DEVE ESTAR NA PRIMEIRA PÁGINA        |
+            |    --> O NAVEGADOR DEVE SER O MOZILLA FIREFOX    |
+            |                                                  |
+            |--------------------------------------------------|
+
+
+
+
+
+
+            |--------------------------------------------------------|
+            |                                                        |
+            |              COMO UTILIZAR O CODIGO:                   |
+            |                                                        |
+            |    --> 1. Abra o Pdf no Mozilla Firefox                |
+            |     --> 2. Aperte F12 e vá em console                  |
+            |    --> 3. Role o pdf até a última página para          | 
+            |        que o navegador leie o pdf inteiro              |
+            |    --> 4. Copie o codigo inteiro com Ctrl+A e Ctrl+C   |
+            |    --> 4. Cole o código no console e tecle ENTER       |
+            |                                                        |
+            |--------------------------------------------------------|
+
+
+*/
+
+
+
+
 //-----------------------------------PEDIDO------------------------------------
 var texto = document.body.innerHTML
-var regexPedido = /(PED[\w]{0,3}[\s:-]{0,3})([\d]{1,4})/gi
-var matchesPed = texto.match(regexPedido);
-var primeiroPedido, segundoPedido
+var primeiraPagina= document.getElementById("viewer").querySelector("[data-page-number]").innerHTML
+var todasAsPaginas = document.querySelectorAll(".page")
+var paginasMenosPrimeira = ""
+var regexPedidoNaNf = /(PED[\w]{0,3}[\s:-]{0,3})([\d]{1,4})/i
+var regexPedidoNoPed = /PEDIDO:[\w\s<>.,;:="'%*()\-\/]{0,500}">\d{1,4}\/?\d{0,4}<|PEDIDO:\s?(\d{1,4})</g
+var matchesPedNoPed
+var matchesPedNaNf
+var pedPadrao, pedNf
 var resultadoPedido
 
 
-async function conferePedido(){                                            //Conferir pedido
+async function conferePedidos(){
     try{
-        if(matchesPed.length == 2){
-            primeiroPedido = matchesPed[0]
-            primeiroPedido = primeiroPedido.replaceAll(/\s/g,"")
-            primeiroPedido = primeiroPedido.replaceAll(/[a-z]/gi,"")
-            primeiroPedido = primeiroPedido.replaceAll(":","")
-            primeiroPedido = primeiroPedido.replaceAll("-","")
+        // Excluindo a primeira pagina para procurar somente nas demais
+        todasAsPaginas.forEach(element =>{
+            if(element.dataset.pageNumber > 1){
+                paginasMenosPrimeira += " " + element.innerHTML
+            }
+        })
 
-            segundoPedido = matchesPed[1]
-            segundoPedido = segundoPedido.replaceAll(/\s/g,"")
-            segundoPedido = segundoPedido.replaceAll(/[a-z]/gi,"")
-            segundoPedido = segundoPedido.replaceAll(":","")
-            segundoPedido = segundoPedido.replaceAll("-","") 
+        // Procurando o pedido padrao nas demais p[aginas]
+        matchesPedNoPed = paginasMenosPrimeira.match(regexPedidoNoPed)
 
-            if(primeiroPedido == segundoPedido){
-                resultadoPedido = '--PEDIDO: OK'
+        if(matchesPedNoPed){
+            for(let i=0; i>-10; i--){
+                pedPadrao= matchesPedNoPed[0].slice(i)
+                if(matchesPedNoPed[0].slice(i-1,i) == ":"){
+                    break
+                }
+                else if(matchesPedNoPed[0].slice(i-1,i) == ">"){
+                    break
+                }
+            }
+
+            // Formatando o pedido padrao
+            pedPadrao = pedPadrao.replaceAll("2023","")
+            pedPadrao = pedPadrao.replaceAll(/[<\s\/]/g,"")
+            pedPadrao[0] == 0 ? pedPadrao = pedPadrao.slice(1) : ""
+
+
+            // Procurando o pedido da nota fiscal somente na primeira pagina
+            matchesPedNaNf = primeiraPagina.match(regexPedidoNaNf)
+            pedNf = matchesPedNaNf[2]
+
+            // Formatando o pedido da NF
+            pedNf[0] == 0 ? pedNf = pedNf.slice(1) : ""
+
+            if(pedPadrao == pedNf) {
+            resultadoPedido = `--PEDIDO: OK                    (${pedPadrao})`  
             }
             else{
-                resultadoPedido = '--PEDIDO: ERRADO'
-            }
-        }
-        else if(matchesPed.length > 2){
-            resultadoPedido = '--PEDIDO: ENCONTRADO 3 PEDIDOS'
+                resultadoPedido = `--PEDIDO: ERRADO!!! ESPERAVA ${pedPadrao} VEIO ${pedNf}`
+            } 
         }
         else{
-            resultadoPedido = '--PEDIDO: NAO ENCONTRADO'
+            resultadoPedido = `--PEDIDO: NAO ENCONTRADO O PED NO PEDIDO DE MATERIAL`
         }
     }
     catch{
-        resultadoPedido = '--PEDIDO: ERRADO'
+        resultadoPedido = `--PEDIDO: ERRO DESCONHECIDO`
     }
-}    
-conferePedido()
+}
+conferePedidos()
+
 
 
 //--------------------------------------------OS--------------------------------
@@ -67,7 +126,7 @@ async function confereOs(){
             matchOsNaNf = primeiraPagina.match(osPadrao)
 
             if(matchOsNaNf){
-                resultadoOs = `------OS: OK`
+                resultadoOs = `------OS: OK                    (${osPadrao})`
             }
             else{
                 resultadoOs = `------OS: ERRADA, NAO ENCONTRADA A OS ${matchOsNaNf} NA NF`
@@ -104,7 +163,7 @@ async function confereNe(){
         if(texto.search(/robson/gi) > 0) {
             matchesNeRobson = texto.match(regexNeRobson)
             if(matchesNeRobson.length >= 1){
-                resultadoNe = '-EMPENHO: OK'
+                resultadoNe = `-EMPENHO: OK                    (${matchesNeRobson[0]})`
             }
             else{
                 resultadoNe = '-EMPENHO: ERRADO!!!'
@@ -113,7 +172,7 @@ async function confereNe(){
         if(texto.search(/mr[\s]pecas/gi) > 0) {
             matchesNeErenice = texto.match(regexNeErenice)
             if(matchesNeErenice.length >= 1){
-                resultadoNe = 'EMPENHO: OK'
+                resultadoNe = `EMPENHO: OK                    (${matchesNeErenice[0]})`
             }
             else{
                 resultadoNe = '-EMPENHO: ERRADO!!!'
@@ -122,7 +181,7 @@ async function confereNe(){
         if(texto.search(/rabelo/gi) > 0) {
             matchesNeGilson = texto.match(regexNeGilson)
             if(matchesNeGilson.length >= 1){
-                resultadoNe = 'EMPENHO: OK'
+                resultadoNe = `EMPENHO: OK                    (${matchesNeGilson[0]})`
             }
             else{
                 resultadoNe = '-EMPENHO: ERRADO!!!'
@@ -131,7 +190,7 @@ async function confereNe(){
         if(texto.search(/parts/gi) > 0) {
             matchesNeParts = texto.match(regexNeParts)
             if(matchesNeParts.length >= 1){
-                resultadoNe = '-EMPENHO: OK'
+                resultadoNe = `-EMPENHO: OK                    (${matchesNeParts[0]})`
             }
             else{
                 resultadoNe = '-EMPENHO: ERRADO!!!'
@@ -140,7 +199,7 @@ async function confereNe(){
         if(texto.search(/alberto/gi) > 0) {
             matchesNeAlberto = texto.match(regexNeAlberto)
             if(matchesNeAlberto.length >= 1){
-                resultadoNe = '-EMPENHO: OK'
+                resultadoNe = `-EMPENHO: OK                    (${matchesNeAlberto[0]})`
             }
             else{
                 resultadoNe = '-EMPENHO: ERRADO!!!'
@@ -214,7 +273,7 @@ async function conferePrefixo(){
             matches7Prefixo ? prefixoTotal += matches7Prefixo.length : ""
 
             if(prefixoTotal >= 3){
-                resultadoPrefixo = "-PREFIXO: OK"
+                resultadoPrefixo = `-PREFIXO: OK                    (${prefixoPadrao})`
             }
             else{
                 resultadoPrefixo = "-PREFIXO: ERRADO!!!"
@@ -284,7 +343,7 @@ async function conferePlaca(){
         }
 
         if(contPlaca >= 2){
-            resultadoPlaca = '---PLACA: OK'
+            resultadoPlaca = `---PLACA: OK                    (${modeloPlaca1})`
         }
         else{
             resultadoPlaca = '---PLACA: ERRADA!!!'
@@ -363,8 +422,8 @@ async function confereDesconto(){
                 tentSoma = Number(tent1.length +tent2.length + tent3.length + tent4.length + tent5.length);
 
                 if (tentSoma >= 2){
-                    resultadoMarca = `---MARCA: ${marca}`
-                    resultadoDesconto = `DESCONTO: Ok`
+                    resultadoMarca = `---MARCA: OK                    (${marca})`
+                    resultadoDesconto = `DESCONTO: Ok                    (${desc1})`
                 } 
                 // else if(tentSoma > 2){
                 //     resultadoMarca = `---MARCA: ${marca}`
@@ -474,19 +533,19 @@ var resultadoContrato
 function confereContrato(){
     try{
         if(matchesAlberto && matchesContratoAlberto){
-            resultadoContrato = `CONTRATO: OK ${matchesContratoAlberto[0]}`
+            resultadoContrato = `CONTRATO: OK                    ( ${matchesContratoAlberto[0]})`
         }
         else if(matchesErenice && matchesContratoErenice){
-            resultadoContrato = `CONTRATO: OK ${matchesContratoErenice[0]}`
+            resultadoContrato = `CONTRATO: OK                    (${matchesContratoErenice[0]})`
         }
         else if(matchesGilson && matchesContratoGilson){
-            resultadoContrato = `CONTRATO: OK ${matchesContratoGilson[0]}`
+            resultadoContrato = `CONTRATO: OK                    (${matchesContratoGilson[0]})`
         } 
         else if(matchesPartslub && matchesContratoParts){
-            resultadoContrato = `CONTRATO: OK ${matchesContratoParts[0]}`
+            resultadoContrato = `CONTRATO: OK                    (${matchesContratoParts[0]})`
         } 
         else if(matchesRobson && matchesContratoRobson){
-            resultadoContrato = `CONTRATO: OK ${matchesContratoRobson[0]}`
+            resultadoContrato = `CONTRATO: OK                    ( ${matchesContratoRobson[0]})`
         } 
         else{
             resultadoContrato = 'CONTRATO: ERRADO!!!'
@@ -537,7 +596,7 @@ async function confereKm(){
             matchesKm3 ? matchesKmTotal += matchesKm3.length : ""
 
             if(matchesKmTotal >= 1){
-                resultadoKm = '------KM: OK'
+                resultadoKm = `------KM: OK                    (${kmPadrao})`
             }
             else{
                 resultadoKm = '------KM: ERRADO!!!'
@@ -575,7 +634,7 @@ async function confereAno(){
             matchesAnoPag1= primeiraPagina.match(anoPadrao);
 
             if(matchesAnoPag1.length == 1 && (anoPadrao == matchesAnoPag1[0])){
-                resultadoAno = "-----ANO: OK"
+                resultadoAno = `-----ANO: OK                    (${anoPadrao})`
             }
             else if(matchesAnoPag1.length > 1){
                 resultadoAno = "-----ANO: MAIS DE 2 ANOS ENCONTRADOS"   
@@ -625,7 +684,7 @@ function confereCodigos(){
                 }
             }
             if (arrayResposta.length == 0){
-                resultadoCodigos = '-CODIGOS: OK'
+                resultadoCodigos = `-CODIGOS: OK                    (${nCodigos} CÓDIGO(S))`
             }
             else{
                 resultadoCodigos = `-CODIGOS: ${arrayResposta}`
@@ -702,39 +761,39 @@ async function confereValorNf(){
                         matchesAgrale ? resultadoValorNf: "---VALOR: AGRALE NAO CALCULA"
                         if(matchesIveco){
                             nfTeste = nfBruto * (1-0.52)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesBmw){
                             nfTeste = nfBruto * (1-0.07)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesRenault){
                             nfTeste = nfBruto * (1-0.58)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesFord && matchesPartslub){
                             nfTeste = nfBruto * (1-0.59)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesYamaha){
                             nfTeste = nfBruto * (1-0.55)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesHonda){
                             nfTeste = nfBruto * (1-0.45)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesFiat){
                             nfTeste = nfBruto * (1-0.692)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesMitsubishi){
                             nfTeste = nfBruto * (1-0.61)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                         else if(matchesCruze && matchesRobson){
                             nfTeste = nfBruto * (1-0.65)
-                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= '---VALOR: OK': resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
+                            nfTeste.toFixed(2) == nfDesconto.toFixed(2) ? resultadoValorNf= `---VALOR: OK                    (${nfDesconto.toFixed(2)})`: resultadoValorNf= `----VALOR: ERRADO!! VALOR ESPERADO: ${nfTeste.toFixed(2)} VALOR DA NF: ${nfDesconto.toFixed(2)}`
                         }
                     }
                     else{
